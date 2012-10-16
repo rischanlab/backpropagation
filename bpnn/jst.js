@@ -42,7 +42,7 @@ NeuralNetwork.prototype = {
     }
   },
 
-  run: function(input) {
+  run: function(input) { //untuk testing
     if (this.inputLookup) {
       input = lookup.toArray(this.inputLookup, input);
     }
@@ -55,13 +55,14 @@ NeuralNetwork.prototype = {
     return output;
   },
 
+  
   runInput: function(input) {
     this.output[0] = input;  // set output state of input layer
 
     for (var layer = 1; layer <= this.outputLayer; layer++) {
       for (var node = 0; node < this.sizes[layer]; node++) {
         var bobot = this.bobot[layer][node];
-
+     //menghitung input di hiden layer dan output layer
         var sum = this.bias[layer][node];
         for (var k = 0; k < bobot.length; k++) {
           sum += bobot[k] * input[k];
@@ -89,7 +90,7 @@ NeuralNetwork.prototype = {
 
     var hiddenSizes = this.hiddenSizes;
     if (!hiddenSizes) {
-      hiddenSizes = [Math.max(3, Math.floor(inputSize / 2))];
+      hiddenSizes = [Math.max(3, Math.floor(inputSize / 2))]; //floor untuk membulatkan bilangan ke integer terbawah
     }
     var sizes = _([inputSize, hiddenSizes, outputSize]).flatten();
     this.initialize(sizes);
@@ -104,7 +105,7 @@ NeuralNetwork.prototype = {
       error = sum / data.length;
 
       if (log && (i % logPeriod == 0)) {
-        console.log("iterasi:", i, "training error:", error);
+        console.log("iterasi:", i, " error training:", error);
       }
       if (callback && (i % callbackPeriod == 0)) {
         callback({ error: error, iterasi: i });
@@ -121,7 +122,7 @@ NeuralNetwork.prototype = {
     // feed forwardnya yaitu dari input ke hiden layer kemudian layer output
     this.runInput(input);
 
-    // back propagation .. kembali ke belakang, hitung ambang/delta dan juga update bobot
+    // back propagation .. kembali ke belakang,dan juga update bobot
     this.hitungDelta(target);
     this.updateBobot();
 
@@ -220,6 +221,7 @@ function setrandom(size) {
   return array;
 }
 
+//Jika MSE sekarang lebih kecil dari MSE sebelumnya, maka laju pembelajaran dinaikkan. 
 function mse(errors) {
   // mean squared error
   var sum = 0;
